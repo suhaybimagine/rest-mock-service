@@ -2,6 +2,17 @@ import express from 'express';
 import Guid from 'guid';
 import * as util from 'util';
 import * as _ from "./Utils";
+import multer from 'multer';
+
+// Files uploaded will be stored on disk
+const upload = multer({
+	storage: multer.diskStorage({
+		destination: "uploads/",
+		filename: function (req, file, cb) {
+			cb(null, "F_" + Date.now() + "_" + file.originalname.replace(/\s+/g, "_"))
+		}
+	})
+});
 
 let route = new express.Router();
 let sampleUserId = Guid.create();
@@ -18,17 +29,20 @@ route.post('/login', function (req, res) {
 	res.json({ status: "success", user_id: sampleUserId, name: "Fake User", is_confirmed: false});
 });
 
-route.post('/signup', function (req, res) {
+route.post('/signup', upload.single('photo'), function (req, res) {
 
 	var q = util._extend({}, req.body);
 	let { email, name, password } = q;
+	let photo = req.file;
+	let photo_url = photo.path;
 
 	console.log("Signup new user:")
 	console.log("  - email:" + email)
 	console.log("  - name:" + name)
 	console.log("  - password:" + password)
+	console.log("  - photo:" + photo_url)
 
-	res.json({ status: "success", user_id: sampleUserId });
+	res.json({ status: "success", user_id: sampleUserId, photo_url });
 });
 
 route.post('/confirm', function (req, res) {

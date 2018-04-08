@@ -3,18 +3,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import busyboy from 'connect-busboy';
 import path from 'path';
-import multer from 'multer';
 import route from './app-service';
 
-// Files uploaded will be stored on disk
-const upload = multer({
-	storage: multer.diskStorage({
-		destination: "uploads/",
-		filename: function (req, file, cb) {
-			cb(null, "F_" + Date.now() + "_" + file.originalname.replace(/\s+/g, "_"))
-		}
-	})
-});
 
 // In case you need to store them in memory as buffers, use the following:
 //const storage = multer.memoryStorage()
