@@ -32,14 +32,19 @@ route.post('/login', function (req, res) {
 route.post('/signup', upload.single('photo'), function (req, res) {
 
 	var q = util._extend({}, req.body);
-	let { email, name, password } = q;
+	let { email, name, password, birthdate, location, gender, phone, address } = q;
 	let photo = req.file;
-	let photo_url = photo.path;
+	let photo_url = (photo) ? photo.path : null;
 
 	console.log("Signup new user:")
 	console.log("  - email:" + email)
 	console.log("  - name:" + name)
 	console.log("  - password:" + password)
+	console.log("  - phone:" + phone)
+	console.log("  - birthdate:" + birthdate)
+	console.log("  - location:" + location)
+	console.log("  - gender:" + gender)
+	console.log("  - address:" + address)
 	console.log("  - photo:" + photo_url)
 
 	res.json({ status: "success", user_id: sampleUserId, photo_url });
